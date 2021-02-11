@@ -1,0 +1,3 @@
+1. change algorithm so that it travels up the y axis and offsets the x and z from the median (given coordinates)
+2. Verify that the total number of added coordinates = distance^3
+3. Verift that distance from everycoordinate to the root coordinate is <= distanc
