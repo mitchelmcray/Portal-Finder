@@ -15,9 +15,9 @@ int get_distance(tuple<int, int, int> x, tuple<int, int, int> y);
 
 int main()
 {
-    tuple<int, int, int> test_coords = make_tuple(1,2,3);
+    /*tuple<int, int, int> test_coords = make_tuple(1,2,3);
     int distance = 5;
-    /*set<tuple<int, int, int>> test;
+    set<tuple<int, int, int>> test;
     set<tuple<int, int, int>>::iterator test_iter;
     bool inserted;
     int elim;
@@ -29,7 +29,7 @@ int main()
     tie(test_iter, inserted) = test.insert(test_coords);
     elim = test.erase(make_tuple(3,2,1));
 
-    cout <<"Insertion (false): \r\n" << inserted << " " << elim << "\r\n";*/
+    cout <<"Insertion (false): \r\n" << inserted << " " << elim << "\r\n";
     
     
     tuple<int, int> x_bounds, y_bounds, z_bounds;
@@ -47,8 +47,26 @@ int main()
     tie(z_left_bound, z_right_bound) = z_bounds;
     cout<<"z bounds:\r\n" << z_left_bound << " " << z_right_bound << "\r\n";
 
-    set<tuple<int, int, int>> test_set = get_all_coords(test_coords, distance);
+    set<tuple<int, int, int>> test_set = get_all_coords(test_coords, distance);*/
 
+    set<tuple<int,int,int>> test_set_validation;
+    for(int i=-1;i<2;i++){
+        for(int j=-1;j<2;j++){
+            for(int k=-1;k<2;k++){
+                tuple<int,int,int> current_test_coord = make_tuple(i,j,k);
+                test_set_validation.insert(current_test_coord);
+            }
+        }
+    }
+    set<tuple<int,int,int>>::iterator test_it = test_set_validation.begin();
+    set<tuple<int,int,int>>::iterator test_end_it = test_set_validation.end();
+    while(test_it != test_end_it){
+        int test_x, test_y, test_z;
+        tie(test_x, test_y, test_z) = *test_it;
+        cout << "x: " << test_x << "y: " << test_y << "z: " << test_z <<"\r\n";
+        test_it++;
+    }
+    bool tests = test_coordinate_set(test_set_validation, 1, make_tuple(0,0,0));
     return 0;
 }
 
@@ -84,6 +102,7 @@ int test_coordinate_set(set<tuple<int, int ,int>> coordinate_set, int distance,
     while(coord_it != end_it){
         int calculated_distance = get_distance(*coord_it, base_coordinate);
         distance_test = distance_test && (calculated_distance <= distance);
+        coord_it++;
     }
     return size_test && distance_test;
 }
