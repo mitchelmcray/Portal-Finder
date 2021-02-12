@@ -8,6 +8,9 @@ set<tuple<int,int,int>> get_all_coords(tuple<int,int,int> coordinate, int distan
 tuple<tuple<int, int>, tuple<int, int>, tuple<int, int>> get_constraints(
     tuple<int, int, int> coordinates, int distance);
 tuple<int, int> get_range(int coordinate, int distance);
+int test_coordinate_set(set<tuple<int, int ,int>> coordinate_set, int distance, 
+        tuple<int, int, int> base_coordinate);
+int get_distance(tuple<int, int, int> x, tuple<int, int, int> y);
 
 
 int main()
@@ -50,12 +53,24 @@ int main()
 }
 
 /**
+ * Performs data validation on the given coordinate set.
  * 
- *
-int test_coordinate_set(set<tuple<int, int ,int>> coordinate_set, int distance){
+ * test_coordinate_set makes sure that the given coordinate_set contains as many
+ *     elements as would be expected for the given distance. It also makes sure that
+ *     all coordinates in the set are within the given distance of base_coordinate.
+ * 
+ * @param coordinate_set - A set of tuples containing 3D coordinates
+ * @param distance - An int representing the maximum allowed manhattan distance from
+ *                   base_coordinate
+ * @param base_coordinate - A tuple containing the 3D coordinate to use for referance
+ * @return - 1 if all validity tests pass, and 0 if any fail
+ */
+int test_coordinate_set(set<tuple<int, int ,int>> coordinate_set, int distance, 
+        tuple<int, int, int> base_coordinate){
     int set_size = coordinate_set.size();
     int expected_size = distance*distance*distance;
-    if(!(set_size==expected_size)){
+    bool size_test = (set_size==expected_size);
+    if(!size_test){
         if(set_size<expected_size){
             cout << "ERROR: Set has fewer elements than expected";
         } else {
@@ -65,10 +80,28 @@ int test_coordinate_set(set<tuple<int, int ,int>> coordinate_set, int distance){
 
     set<tuple<int, int, int>>::iterator coord_it = coordinate_set.begin();
     set<tuple<int, int, int>>::iterator end_it = coordinate_set.end();
+    bool distance_test = true;
     while(coord_it != end_it){
-        check_distance(*it);
+        int calculated_distance = get_distance(*coord_it, base_coordinate);
+        distance_test = distance_test && (calculated_distance <= distance);
     }
-}*/
+    return size_test && distance_test;
+}
+/**
+ * Finds the Manhattan distance between two coordinates
+ * 
+ * @param x - A tuple of ints representing the first 3D coordinate
+ * @param y - A tuple of ints representing the second 3D coordinate
+ * @return - The result of |x1-y1| + |x2-y2| + |x3-y3|
+ */
+int get_distance(tuple<int, int, int> x, tuple<int, int, int> y){
+    //Decompose coordinates
+    int x1, x2, x3, y1, y2, y3;
+    tie(x1, x2, x3) = x;
+    tie(y1, y2, y3) = y;
+    //Return distance
+    return abs(x1-y1) + abs(x2-y2) + abs(x3-y3);
+}
 
 
 /**
